@@ -4,7 +4,10 @@ import (
 	"log"
 	"net"
 
-	inventorypb "github.com/ErwinSalas/inventory-service/proto/inventory"
+	ds "github.com/ErwinSalas/inventory-service/cmd"
+	inventorypb "github.com/ErwinSalas/inventory-service/proto"
+	"github.com/ErwinSalas/inventory-service/seed"
+	services "github.com/ErwinSalas/inventory-service/services"
 	"google.golang.org/grpc"
 )
 
@@ -18,8 +21,10 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	server := grpc.NewServer()
-	datastore := InitDatastore()
-	inventoryService := NewInventoryService(datastore)
+	datastore := ds.InitDatastore()
+	seed.Load(datastore)
+
+	inventoryService := services.NewInventoryService(datastore)
 	inventorypb.RegisterInventoryServer(server, inventoryService)
 	log.Printf("server listening at %v", listener.Addr())
 	if err := server.Serve(listener); err != nil {

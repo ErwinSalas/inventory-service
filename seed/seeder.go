@@ -9,10 +9,19 @@ import (
 
 var items = []models.Item{
 	models.Item{
-		Name: "Steven victor",
+		Name: "Macbook Pro",
 	},
 	models.Item{
-		Name: "Martin Luther",
+		Name: "Ipad",
+	},
+	models.Item{
+		Name: "Axe io",
+	},
+	models.Item{
+		Name: "Boss Katana 50",
+	},
+	models.Item{
+		Name: "Cargador de Mac",
 	},
 }
 
@@ -31,8 +40,8 @@ func Load(db *gorm.DB) {
 		log.Fatalf("attaching foreign key error: %v", err)
 	}
 
-	for i, _ := range items {
-		err = db.Debug().Model(&models.Items{}).Create(&items[i]).Error
+	for i := range items {
+		err = db.Debug().Model(&models.Item{}).Create(&items[i]).Error
 		if err != nil {
 			log.Fatalf("cannot seed users table: %v", err)
 		}

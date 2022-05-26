@@ -2,10 +2,9 @@ package services
 
 import (
 	"context"
-	"math/rand"
 
 	"github.com/ErwinSalas/inventory-service/models"
-	inventorypb "github.com/ErwinSalas/inventory-service/proto/inventory"
+	inventorypb "github.com/ErwinSalas/inventory-service/proto"
 	"github.com/jinzhu/gorm"
 )
 
@@ -17,33 +16,41 @@ type InventoryService struct {
 func NewInventoryService(datastore *gorm.DB) *InventoryService {
 	return &InventoryService{
 		datastore:                    datastore,
-		UnimplementedInventoryServer: &UnimplementedInventoryServer{},
+		UnimplementedInventoryServer: inventorypb.UnimplementedInventoryServer{},
 	}
 }
 
-func (s *InventoryService) GetItem(ctx context.Context, in *inventorypb.GetItemRequest) (*inventorypb.GetItemResponse, error) {
-	id := make([]byte, 4)
-	rand.Read(id)
-	return &inventorypb.GetItemResponse{
-		item: &inventorypb.Item{
-			id:   id,
-			name: "Test item",
+func (s *InventoryService) GetItem(ctx context.Context, in *inventorypb.ItemGetRequest) (*inventorypb.ItemGetResponse, error) {
+	item := models.Item{}
+	itemModel, err := item.FindItemByID(s.datastore, in.Id)
+
+	if err != nil {
+		return nil, err
+	}
+	return &inventorypb.ItemGetResponse{
+		Item: &inventorypb.Item{
+			Id:   itemModel.ID,
+			Name: itemModel.Name,
 		},
 	}, nil
 }
 
-func (s *InventoryService) List(ctx context.Context, in *inventorypb.GetItemRequest) (*inventorypb.GetItemResponse, error) {
+func (s *InventoryService) List(ctx context.Context, in *inventorypb.ListItemsRequest) (*inventorypb.ListItemsResponse, error) {
 	item := models.Item{}
 	itemspbs := []*inventorypb.Item{}
-	items, err := item.FindAllItems(InventoryService.datastore)
+	items, err := item.FindAllItems(s.datastore)
 	if err != nil {
 		return nil, err
 	}
 
-	for items := range items {
-		append(itemspbs, &inventorypb.Item{
-			id:   item.ID,
-			name: item.Name,
+	for _, item := range items {
+		itemspbs = append(itemspbs, &inventorypb.Item{
+			Id:   item.ID,
+			Name: item.Name,
 		})
 	}
+
+	return &inventorypb.ListItemsResponse{
+		Items: itemspbs,
+	}, nil
 }

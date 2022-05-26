@@ -8,6 +8,7 @@ import (
 	"github.com/ErwinSalas/inventory-service/models"
 	"github.com/jinzhu/gorm"
 
+	_ "github.com/jinzhu/gorm/dialects/mysql" //mysql database driver
 	"github.com/joho/godotenv"
 )
 

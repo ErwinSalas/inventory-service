@@ -12,12 +12,12 @@ service Inventory {
 }
 
 message Item {
-    uint32 id= 1;
+    uint64 id= 1;
     string name = 2;
 }
 
 message ItemGetRequest {
-    uint32 id= 1;
+    uint64 id= 1;
 }
 
 message ItemGetResponse {

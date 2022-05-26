@@ -7,7 +7,7 @@ services:
       - 8081:8081
     restart: on-failure
     volumes:
-      - ./:/usr/src/app-inventoy/
+      - ./:/usr/src/app-inventory/
     networks:
       - fullstack
 

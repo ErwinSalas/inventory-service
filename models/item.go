@@ -7,7 +7,7 @@ import (
 )
 
 type Item struct {
-	ID   uint32 `gorm:"primary_key;auto_increment" json:"id"`
+	ID   uint64 `gorm:"primary_key;auto_increment" json:"id"`
 	Name string `gorm:"size:255;not null;unique" json:"nickname"`
 }
 
@@ -29,7 +29,7 @@ func (u *Item) FindAllItems(db *gorm.DB) ([]Item, error) {
 	return Items, err
 }
 
-func (u *Item) FindItemByID(db *gorm.DB, uid uint32) (*Item, error) {
+func (u *Item) FindItemByID(db *gorm.DB, uid uint64) (*Item, error) {
 	err := db.Debug().Model(Item{}).Where("id = ?", uid).Take(&u).Error
 	if err != nil {
 		return &Item{}, err
@@ -40,7 +40,7 @@ func (u *Item) FindItemByID(db *gorm.DB, uid uint32) (*Item, error) {
 	return u, err
 }
 
-func (u *Item) UpdateAItem(db *gorm.DB, uid uint32) (*Item, error) {
+func (u *Item) UpdateAItem(db *gorm.DB, uid uint64) (*Item, error) {
 
 	db = db.Debug().Model(&Item{}).Where("id = ?", uid).Take(&Item{}).UpdateColumns(
 		map[string]interface{}{
@@ -58,7 +58,7 @@ func (u *Item) UpdateAItem(db *gorm.DB, uid uint32) (*Item, error) {
 	return u, nil
 }
 
-func (u *Item) DeleteAItem(db *gorm.DB, uid uint32) (int64, error) {
+func (u *Item) DeleteAItem(db *gorm.DB, uid uint64) (int64, error) {
 
 	db = db.Debug().Model(&Item{}).Where("id = ?", uid).Take(&Item{}).Delete(&Item{})
 

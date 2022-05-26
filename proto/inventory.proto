@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option go_package = "github.com/ErwinSalas/inventory-service/proto";
+
+package inventory;
+
+service Inventory {
+    rpc InsertItem(ItemInserRequest) returns (InsertResponse){};
+    rpc GetItem(ItemGetRequest) returns (ItemGetResponse){};
+    rpc UpdateItem(Item) returns (InsertResponse){};
+    rpc ListItems(ListItemsRequest) returns (ListItemsResponse){};
+}
+
+message Item {
+    uint32 id= 1;
+    string name = 2;
+}
+
+message ItemGetRequest {
+    uint32 id= 1;
+}
+
+message ItemGetResponse {
+    Item item = 1;
+}
+
+message ItemInserRequest {
+    Item item = 1;
+}
+
+message InsertResponse {
+    
+}
+
+message ListItemsRequest {
+    
+}
+
+message ListItemsResponse {
+    repeated Item items = 1;
+}

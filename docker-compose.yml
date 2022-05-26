@@ -1,0 +1,56 @@
+version: '3'
+services:
+  inventory-service:
+    container_name: inventory-api
+    build: .
+    ports: 
+      - 8081:8081
+    restart: on-failure
+    volumes:
+      - ./:/usr/src/app-inventoy/
+    depends_on:
+      - inventory-mysql           # Uncomment this when using mysql.
+    networks:
+      - fullstack
+  
+  inventory-mysql:
+    image: mysql:5.7
+    container_name: inventory-database
+    ports: 
+      - 3307:3306
+    environment: 
+      - MYSQL_ROOT_HOST=${DB_HOST} 
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - database_inventory:/var/lib/mysql
+    networks:
+      - fullstack
+  
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: phpmyadmin_container
+  #   depends_on:
+  #     - inventory-mysql
+  #   environment:
+  #     - PMA_HOST=inventory-mysql # Note the "mysql". Must be the name of the what you used as the mysql service.
+  #     - PMA_USER=${DB_USER}
+  #     - PMA_PORT=${DB_PORT}
+  #     - PMA_PASSWORD=${DB_PASSWORD}
+  #   ports:
+  #     - 9090:80
+  #   restart: always
+  #   networks:
+  #     - fullstack
+
+
+networks:
+  fullstack:
+    driver: bridge
+
+volumes:
+  api:
+  database_inventory:                   # Uncomment this when using mysql.
+

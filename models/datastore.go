@@ -1,11 +1,10 @@
-package cmd
+package models
 
 import (
 	"fmt"
 	"log"
 	"os"
 
-	"github.com/ErwinSalas/inventory-service/models"
 	"github.com/jinzhu/gorm"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql" //mysql database driver
@@ -36,7 +35,7 @@ func InitDatastore() *gorm.DB {
 		fmt.Printf("We are connected to the %s database", Dbdriver)
 	}
 
-	datastore.Debug().AutoMigrate(&models.Item{}) //database migration
+	datastore.Debug().AutoMigrate(&Item{}) //database migration
 	return datastore
 
 }
